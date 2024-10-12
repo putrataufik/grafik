@@ -10,7 +10,6 @@ import {
   Legend,
 } from 'chart.js';
 
-// Mendaftarkan semua elemen dan skala yang diperlukan
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
 const BasicAlgorithmResults = ({ x1, y1, x2, y2 }) => {
@@ -19,19 +18,19 @@ const BasicAlgorithmResults = ({ x1, y1, x2, y2 }) => {
   useEffect(() => {
     const newPoints = [];
     const deltaX = 1;
-    const m = (x2 !== x1) ? (y2 - y1) / (x2 - x1) : 0; // Hindari pembagian dengan nol
+    const m = (x2 !== x1) ? (y2 - y1) / (x2 - x1) : 0; 
     let currentYB = y1;
 
     for (let x = x1; x <= x2; x = (parseFloat(x) + deltaX).toFixed(1)) {
-      const y = currentYB; // Ambil nilai currentYB tanpa menambahkan m pada iterasi pertama
+      const y = currentYB; 
       newPoints.push({
         x: parseFloat(x).toFixed(1),
         dx: deltaX,
         currentYB: currentYB.toFixed(2),
         m: m.toFixed(2),
-        y: y.toFixed(2), // Pastikan y tidak NaN
+        y: y.toFixed(2), 
       });
-      currentYB += m * deltaX; // Hanya menambahkan m setelah iterasi pertama
+      currentYB += m * deltaX;
     }
     setPoints(newPoints);
   }, [x1, y1, x2, y2]);

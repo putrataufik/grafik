@@ -38,13 +38,13 @@ const BresenhamAlgorithmResults = ({ x1, y1, x2, y2 }) => {
       setPoints(newPoints);
     }, [x1, y1, x2, y2]);
 
-    // Data untuk ChartJS
+   
     const data = {
-      labels: points.map((point) => point.x), // Label untuk setiap titik x
+      labels: points.map((point) => point.x), 
       datasets: [
         {
           label: 'Bresenham Line',
-          data: points.map((point) => point.y), // Data y untuk grafik
+          data: points.map((point) => point.y), 
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1
