@@ -1,73 +1,21 @@
 import React, { useState } from "react";
 import BasicAlgorithmResults from "./components/BasicAlgorithmResults";
 import DDAAlgorithmResults from "./components/DDAAlgorithmResults";
+import BresenhamAlgorithmResults from "./components/BresenhamAlgoritmResult";
 
 function App() {
   const [x1, setX1] = useState(0);
   const [y1, setY1] = useState(0);
   const [x2, setX2] = useState(0);
   const [y2, setY2] = useState(0);
-  const [pointsBasic, setPointsBasic] = useState([]); 
-  const [pointsDDA, setPointsDDA] = useState([]); 
-  const [algorithm, setAlgorithm] = useState("basic"); 
-
-  const handleRun = () => {
-    let newPointsBasic = [];
-    let newPointsDDA = [];
-
-    if (algorithm === "basic") {
-      const m = (y2 - y1) / (x2 - x1); 
-      let currentYB = y1; 
-      const deltaX = 1; 
-
-      for (let x = x1; x <= x2; x = (parseFloat(x) + deltaX).toFixed(1)) {
-        const y = currentYB * deltaX + m; 
-
-        newPointsBasic.push({
-          x: parseFloat(x).toFixed(1),
-          dx: deltaX,
-          currentYB: currentYB.toFixed(2), 
-          m: m.toFixed(2),
-          y: y.toFixed(2), 
-        });
-
-        currentYB += m * deltaX; 
-      }
-      setPointsBasic(newPointsBasic);
-    } else if (algorithm === "dda") {
-      // Algoritma DDA
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const steps = Math.max(Math.abs(dx), Math.abs(dy)); 
-      const incrementX = dx / steps;
-      const incrementY = dy / steps;
-
-      let currentX = x1;
-      let currentY = y1;
-
-      for (let i = 0; i <= steps; i++) {
-        newPointsDDA.push({
-          x: currentX.toFixed(1),
-          y: currentY.toFixed(1),
-          roundX: Math.round(currentX),
-          roundY: Math.round(currentY), 
-        });
-
-        currentX += incrementX; // 
-        currentY += incrementY; //
-      }
-      setPointsDDA(newPointsDDA);
-    }
-  };
+  const [algorithm, setAlgorithm] = useState("");
 
   const handleClear = () => {
     setX1(0);
     setY1(0);
     setX2(0);
     setY2(0);
-    setPointsBasic([]);
-    setPointsDDA([]); 
-    setAlgorithm("basic"); 
+    setAlgorithm("");
   };
 
   return (
@@ -111,22 +59,22 @@ function App() {
 
             <div className="flex gap-2">
               <button
-                onClick={() => {
-                  setAlgorithm("basic");
-                  handleRun();
-                }}
+                onClick={() => setAlgorithm("basic")}
                 className="bg-blue-500 text-white p-2 rounded"
               >
                 Jalankan Algoritma Dasar
               </button>
               <button
-                onClick={() => {
-                  setAlgorithm("dda");
-                  handleRun();
-                }}
+                onClick={() => setAlgorithm("dda")}
                 className="bg-green-500 text-white p-2 rounded"
               >
                 Jalankan Algoritma DDA
+              </button>
+              <button
+                onClick={() => setAlgorithm("bresenham")}
+                className="bg-orange-500 text-white p-2 rounded"
+              >
+                Jalankan Algoritma Bresenham
               </button>
               <button
                 onClick={handleClear}
@@ -139,8 +87,9 @@ function App() {
         </div>
       </div>
 
-      {algorithm === "basic" && <BasicAlgorithmResults points={pointsBasic} />}
-      {algorithm === "dda" && <DDAAlgorithmResults points={pointsDDA} />}
+      {algorithm === "basic" && <BasicAlgorithmResults x1={x1} y1={y1} x2={x2} y2={y2} />}
+      {algorithm === "dda" && <DDAAlgorithmResults x1={x1} y1={y1} x2={x2} y2={y2} />}
+      {algorithm === "bresenham" && <BresenhamAlgorithmResults x1={x1} y1={y1} x2={x2} y2={y2} />}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -10,15 +10,38 @@ import {
   Legend,
 } from 'chart.js';
 
+// Mendaftarkan semua elemen dan skala yang diperlukan
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
-const BasicAlgorithmResults = ({ points }) => {
+const BasicAlgorithmResults = ({ x1, y1, x2, y2 }) => {
+  const [points, setPoints] = useState([]);
+
+  useEffect(() => {
+    const newPoints = [];
+    const deltaX = 1;
+    const m = (x2 !== x1) ? (y2 - y1) / (x2 - x1) : 0; // Hindari pembagian dengan nol
+    let currentYB = y1;
+
+    for (let x = x1; x <= x2; x = (parseFloat(x) + deltaX).toFixed(1)) {
+      const y = currentYB; // Ambil nilai currentYB tanpa menambahkan m pada iterasi pertama
+      newPoints.push({
+        x: parseFloat(x).toFixed(1),
+        dx: deltaX,
+        currentYB: currentYB.toFixed(2),
+        m: m.toFixed(2),
+        y: y.toFixed(2), // Pastikan y tidak NaN
+      });
+      currentYB += m * deltaX; // Hanya menambahkan m setelah iterasi pertama
+    }
+    setPoints(newPoints);
+  }, [x1, y1, x2, y2]);
+
   const chartData = {
-    labels: points.map((point) => point.x), 
+    labels: points.map((point) => point.x),
     datasets: [
       {
         label: 'Garis Koordinat (Algoritma Dasar)',
-        data: points.map((point) => point.y), 
+        data: points.map((point) => point.y),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
@@ -28,6 +51,7 @@ const BasicAlgorithmResults = ({ points }) => {
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Tabel Koordinat */}
       <div className="bg-gray-100 p-4 rounded-lg">
         <h3>Tabel Koordinat Garis (Algoritma Dasar):</h3>
         <table className="table-auto w-full border-collapse border border-gray-300">

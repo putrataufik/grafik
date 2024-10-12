@@ -1,8 +1,45 @@
-// components/DDAAlgorithmResults.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-const DDAAlgorithmResults = ({ points }) => {
+// Mendaftarkan semua elemen dan skala yang diperlukan
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
+
+const DDAAlgorithmResults = ({ x1, y1, x2, y2 }) => {
+  const [points, setPoints] = useState([]);
+
+  useEffect(() => {
+    const newPoints = [];
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const steps = Math.max(Math.abs(dx), Math.abs(dy));
+    const incrementX = dx / steps;
+    const incrementY = dy / steps;
+
+    let currentX = x1;
+    let currentY = y1;
+
+    for (let i = 0; i <= steps; i++) {
+      newPoints.push({
+        x: currentX.toFixed(1),
+        y: currentY.toFixed(1),
+        roundX: Math.round(currentX),
+        roundY: Math.round(currentY),
+      });
+      currentX += incrementX;
+      currentY += incrementY;
+    }
+    setPoints(newPoints);
+  }, [x1, y1, x2, y2]);
+
   const chartData = {
     labels: points.map((point) => point.x),
     datasets: [
@@ -18,6 +55,7 @@ const DDAAlgorithmResults = ({ points }) => {
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Tabel Koordinat */}
       <div className="bg-gray-100 p-4 rounded-lg">
         <h3>Tabel Koordinat Garis (DDA):</h3>
         <table className="table-auto w-full border-collapse border border-gray-300">
@@ -45,7 +83,7 @@ const DDAAlgorithmResults = ({ points }) => {
           <p>
             1. Hitung DX dan DY: DX = x2 - x1, DY = y2 - y1
             <br />
-            2. Tentukan nilai Step: Jika |DY|  |DX|, gunakan |DY| sebagai nilai step; jika |DX|  |DY|, gunakan |DX| sebagai nilai step.
+            2. Tentukan nilai Step: Jika |DY| lebih dari |DX|, gunakan |DY| sebagai nilai step; jika |DX| lebih dari |DY|, gunakan |DX| sebagai nilai step.
             <br />
             3. Hitung nilai IncrementX dan IncrementY: IncrementX = DX / Step, IncrementY = DY / Step.
             <br />
